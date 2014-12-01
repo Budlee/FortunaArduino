@@ -3,26 +3,33 @@
 
 #include <inttypes.h>
 
-#if defined(ARDUINO) && ARDUINO >= 100 
-#include <String.h>
-typedef String String;
-#else
-#include <string>
-typedef std::string String;
-#endif
+//#if defined(ARDUINO) && ARDUINO >= 100 
+//#include <String.h>
+//typedef String String;
+//#else
+//#include <string>
+//typedef std::string String;
+//#endif
 
 
 #include "Generator.h"
+#include "Pool.h"
+
+#define POOL_SIZE 32
 
 class PRNGState {
 public:
-    PRNGState(Generator inGen, uint8_t poolCount);
-    String GetPoolData(uint8_t poolNumber);
+    PRNGState();
+    ~PRNGState();
+    Pool* getPool(uint8_t poolNumber);
+    void reseed(uint8_t *entropy, uint16_t entropySize) { generator.reseedGenerator(entropy, entropySize);addToReseedCount();}
+    uint16_t getReseedCount() { return reseedCount;}
+    void addToReseedCount() { ++reseedCount;}
+    uint8_t* generateRandomData(uint16_t numberOfBytes,uint8_t *randomBytes){return generator.generateRandomData(numberOfBytes, randomBytes);}
 private:
-    String* pools;
+    Pool *pools;
     uint16_t reseedCount;
     Generator generator;
-
 };
 
 #endif	/* PRNGSTATE_H */

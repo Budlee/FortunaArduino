@@ -1,14 +1,23 @@
 #include "PRNGState.h"
 
-PRNGState::PRNGState(Generator inGen, uint8_t poolCount)
-:generator(inGen)
-,reseedCount(0)
-,pools(new String[poolCount])
+PRNGState::PRNGState()
+:generator(Generator())
+,pools(new Pool[POOL_SIZE])
+,reseedCount(0x00)
 {
 }
 
-String PRNGState::GetPoolData(uint8_t poolNumber)
+
+PRNGState::~PRNGState()
 {
-    String *ptrPool = pools + poolNumber;
-    return *ptrPool;
+    delete[] pools;
+}
+
+Pool* PRNGState::getPool(uint8_t poolNumber)
+{
+    if(poolNumber >= POOL_SIZE)
+    {
+        return NULL;
+    }
+    return &pools[poolNumber];
 }

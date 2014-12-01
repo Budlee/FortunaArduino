@@ -14,6 +14,12 @@ class Fortuna
   public :
     Fortuna();
     void FortunaSerialPrint();
+    bool RegisterSource(Source *source);
+    void GatherEntropy(){accumulator.AddEventData();}
+    uint8_t* GetRandomData(uint8_t byteSize)
+    {
+        return accumulator.RandomData(byteSize);
+    }
   private:
     Accumulator accumulator;
   
