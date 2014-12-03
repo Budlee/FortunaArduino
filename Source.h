@@ -1,14 +1,6 @@
 #ifndef SOURCE_H
 #define	SOURCE_H
 
-#if defined(ARDUINO) && ARDUINO >= 100 
-#include <String.h>
-typedef String String;
-#else
-#include <string>
-typedef std::string String;
-#endif
-
 #include<inttypes.h>
 
 class Source {

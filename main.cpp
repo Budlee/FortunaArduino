@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <iostream>
 #include "Fortuna.h"
 #include "MySource.h"
 
@@ -100,6 +101,8 @@ int main(int argc, char** argv)
     f.RegisterSource(p);
     f.RegisterSource(p2);
     f.RegisterSource(p3);
+    uint8_t* datawerwer = f.GetRandomData(2);
+    delete[] datawerwer;
     
     for(int i = 0; i< 4*32;i++)
     {
@@ -114,10 +117,12 @@ int main(int argc, char** argv)
     sleep(2); //Need the sleep as the "First reseed" is at boot.
     uint8_t* data1 = f.GetRandomData(2); 
     std::cout << "Banter1";
-    printBytes(data1);
+    //printBytes(data1);
+    delete[] data1;
     data1 = f.GetRandomData(2); 
-    printBytes(data1);
+    //printBytes(data1);
     int ire = 25;
+    delete[] data1;
     data1 = f.GetRandomData(ire); 
     printHash2(data1,ire);
     std::cout << "Banter2";
@@ -137,16 +142,25 @@ int main(int argc, char** argv)
     }
     f.GatherEntropy();
     sleep(2); //Need the sleep as the "First reseed" is at boot.
+    delete[] data1;
     data1 = f.GetRandomData(2); 
     std::cout << "Banter1";
-    printBytes(data1);
+    //printBytes(data1);
+    delete[] data1;
     data1 = f.GetRandomData(2); 
-    printBytes(data1);
-    ire = 25;
+    //printBytes(data1);
+    ire = 128;
+    delete[] data1;
     data1 = f.GetRandomData(ire); 
     printHash2(data1,ire);
+//    for(int e = 0 ; e < 128; e++)
+//    for(int e = 0 ; e < 1024; e++)
+//    {
+//        data1 = f.GetRandomData(ire); 
+//        //printHash2(data1,ire);
+//    }
     std::cout << "Banter2";
-    
+    delete[] data1;
     return 0;
 }
 

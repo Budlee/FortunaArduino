@@ -3,15 +3,6 @@
 
 #include <inttypes.h>
 
-//#if defined(ARDUINO) && ARDUINO >= 100 
-//#include <String.h>
-//typedef String String;
-//#else
-//#include <string>
-//typedef std::string String;
-//#endif
-
-
 #include "Generator.h"
 #include "Pool.h"
 
@@ -26,6 +17,7 @@ public:
     uint16_t getReseedCount() { return reseedCount;}
     void addToReseedCount() { ++reseedCount;}
     uint8_t* generateRandomData(uint16_t numberOfBytes,uint8_t *randomBytes){return generator.generateRandomData(numberOfBytes, randomBytes);}
+    uint8_t getPoolSize(){return POOL_SIZE;}
 private:
     Pool *pools;
     uint16_t reseedCount;

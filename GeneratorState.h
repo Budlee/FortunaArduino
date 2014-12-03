@@ -1,36 +1,29 @@
 #ifndef GENERATOR_STATE_H
 #define	GENERATOR_STATE_H
+
+#include <inttypes.h>
 #if defined(ARDUINO) && ARDUINO >= 100 
  #include <Arduino.h>
-//#include <WProgram.h>
 #endif
-#include <inttypes.h>
+
+#define MAX_COUNTER_SIZE 16 //This will be 2^128 as 8*16 = 128
 
 class GeneratorState
 {
   public:
-    GeneratorState(){keySize=0;key = new uint8_t[0];counter = 0x0;}
-    ~GeneratorState(){delete[] key;}
+    GeneratorState();
+    ~GeneratorState(){delete[] key; delete[] counter;}
     uint8_t getKeySize(){return keySize;}
     uint8_t* getKey(){return key;}
-    uint16_t getCount(){return counter;}
-    void setKey(uint8_t *newKey, uint8_t newKeySize)
-    {
-        keySize = newKeySize;
-        delete[] key;
-        key = new uint8_t[newKeySize];
-        #if defined(ARDUINO) && ARDUINO >= 100 
-            memcpy_P(newKey , newKey, newKeySize);
-        #else
-            std::copy(newKey, newKey+newKeySize, key);
-        #endif
-    }
-    void addToCounter(){++counter;}
+    uint8_t* getCount(){return counter;}
+    void setKey(uint8_t *newKey, uint8_t newKeySize);
+    bool isZeroCount();
+    void addToCounter();
     
   private:
     uint8_t* key;
     uint16_t keySize;
-    uint16_t counter;
+    uint8_t* counter;
 };
 
 #endif

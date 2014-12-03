@@ -29,10 +29,10 @@ Accumulator::~Accumulator()
     }
 }
 
-uint8_t* Accumulator::RandomData(uint16_t numberOfBytes)
+uint8_t* Accumulator::RandomData(uint32_t numberOfBytes)
 {
     //TODO: This needs to be changed as time is in seconds NOT mili seconds so should check reseed every 100mS not every 1000mS
-    if (prngState.getPool(0)->length() >= MIN_POOL_SIZE && reseedTime + 1 < getTime())
+    if (prngState.getPool(0)->length() >= MIN_ENTROPY_POOL_SIZE && reseedTime + 1 < getTime())
     {
         uint16_t reseedCount = prngState.getReseedCount() + 1;
         uint8_t poolUsageCount = 0;
@@ -42,7 +42,7 @@ uint8_t* Accumulator::RandomData(uint16_t numberOfBytes)
          * However in this case I just run through the pools we will use just to save a 
          * bit of dev time
          */
-        for (uint8_t poolIndex = 0; poolIndex < POOL_SIZE; poolIndex++)
+        for (uint8_t poolIndex = 0; poolIndex < prngState.getPoolSize(); poolIndex++)
         {
             #if defined(ARDUINO) && ARDUINO >= 100 
                 float fRC = reseedCount;
@@ -61,7 +61,7 @@ uint8_t* Accumulator::RandomData(uint16_t numberOfBytes)
                 break;
             }
         }
-
+        
         poolEntropy = new uint8_t[32 * poolUsageCount];
         for (u_int8_t poolIndex = 0; poolIndex < poolUsageCount; poolIndex++)
         {
@@ -77,6 +77,7 @@ uint8_t* Accumulator::RandomData(uint16_t numberOfBytes)
             prngState.getPool(poolIndex)->clear();
         }
         prngState.reseed(poolEntropy, 32*poolUsageCount);
+        delete[] poolEntropy;
         reseedTime = getTime();
     }
     uint8_t *randomBytes = new uint8_t[numberOfBytes];

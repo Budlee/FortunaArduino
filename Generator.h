@@ -1,17 +1,18 @@
 #ifndef GENERATOR_H
 #define	GENERATOR_H
 
+#include "GeneratorState.h"
+#include "sha256.h"
+#include "AES.h"
 #include <inttypes.h>
 
 #if defined(ARDUINO) && ARDUINO >= 100 
 #include <Arduino.h>
 #else
-#include <cmath>
+#include <math.h>
 #include <algorithm> 
 #endif
-#include "GeneratorState.h"
-#include "sha256.h"
-#include "AES.h"
+
 
 //#include <WProgram.h>
 
@@ -22,8 +23,8 @@ public:
     Generator();
     ~Generator();
     void reseedGenerator(uint8_t* seed, uint16_t seedSize);
-    uint8_t* generateRandomData(uint16_t numberOfBytes,uint8_t *randomBytes);
-    uint16_t getReseedCount() { return generatorState.getCount();}
+    uint8_t* generateRandomData(uint32_t numberOfBytes,uint8_t *randomBytes);
+    uint8_t* getCount() { return generatorState.getCount();}
 
 //    bool isAvaliable() {
 //        return generatorState.getReseedCount();

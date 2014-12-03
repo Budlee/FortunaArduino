@@ -1,10 +1,9 @@
 #ifndef ACCUMULATOR_H
 #define	ACCUMULATOR_H
 
-#include <inttypes.h>
 #include "PRNGState.h"
 #include "Source.h"
-
+#include <inttypes.h>
 #if defined(ARDUINO) && ARDUINO >= 100 
 #include <Time.h>
 #include <Arduino.h>
@@ -14,14 +13,14 @@
 #endif
 
 #define ENTROPY_SOURCE_MAX_SIZE 255
-#define MIN_POOL_SIZE 32
+#define MIN_ENTROPY_POOL_SIZE 32
 
 class Accumulator
 {
 public:
     Accumulator();
     ~Accumulator();
-    uint8_t* RandomData(u_int16_t numberOfBytes);
+    uint8_t* RandomData(uint32_t numberOfBytes);
     bool registerEntropySource(Source *source);
     void AddEventData();
 private:

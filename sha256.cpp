@@ -1,8 +1,9 @@
-#include <string.h>
-#include <string>
 #if defined(ARDUINO) && ARDUINO >= 100 
 //#include <avr/io.h>
 //#include <avr/pgmspace.h>
+#include <string.h>
+#else
+#include <string>
 #endif
 #include "sha256.h"
 #if defined(ARDUINO) && ARDUINO >= 100 

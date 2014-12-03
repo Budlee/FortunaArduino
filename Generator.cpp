@@ -1,7 +1,5 @@
-#include <stdlib.h>
-
 #include "Generator.h"
-#include "AES.h"
+
 
 Generator::Generator()
 : generatorState(GeneratorState())
@@ -35,11 +33,12 @@ void Generator::reseedGenerator(uint8_t* seed, uint16_t seedSize)
         uint8_t *shaResult = sha.result();
     	generatorState.setKey(shaResult, 32);
     	generatorState.addToCounter();
+        delete[] newKey;
 }
 
-uint8_t* Generator::generateRandomData(uint16_t numberOfBytes, u_int8_t *randomBytes)
+uint8_t* Generator::generateRandomData(uint32_t numberOfBytes, u_int8_t *randomBytes)
 {
-    if (numberOfBytes >= 1 && numberOfBytes < 2^20)
+    if (numberOfBytes >= 1 && numberOfBytes < pow(2.0,20.0))
     {
         uint8_t rNoB = ceil(numberOfBytes / 16.0);
         uint8_t *random16kBytes = new uint8_t[rNoB * 16];
@@ -50,6 +49,10 @@ uint8_t* Generator::generateRandomData(uint16_t numberOfBytes, u_int8_t *randomB
             #else
                 std::copy(random16kBytes, random16kBytes + numberOfBytes, randomBytes);
             #endif
+            uint8_t *newKey = new uint8_t[2 * 16];
+            generateBlocks(2, newKey);
+            generatorState.setKey(newKey, 32);
+            delete[] newKey;
         }
         delete[] random16kBytes;
     }
@@ -58,17 +61,18 @@ uint8_t* Generator::generateRandomData(uint16_t numberOfBytes, u_int8_t *randomB
 
 bool Generator::generateBlocks(uint8_t numberOfBlocks, uint8_t* pseudroRandomData)
 {
-    if (numberOfBlocks >= 1 && generatorState.getReseedCount() != 0)
+    if (numberOfBlocks >= 1 && !generatorState.isZeroCount())
     {
         uint8_t *keyPtr = generatorState.getKey();
+        aes.clean();
+        aes.set_key(keyPtr, generatorState.getKeySize());
         for (uint8_t index = 0; index < numberOfBlocks; index++)
         {
-            aes.clean();
-            aes.set_key(keyPtr, generatorState.getKeySize());
-            
-            uint8_t v = generatorState.getReseedCount();
-            aesPlainText[N_BLOCK-2] = v>>8 &0xFF;
-            aesPlainText[N_BLOCK-1] = v &0xFF;
+            uint8_t *v = generatorState.getCount();
+            for(uint8_t indexCounter = 0; indexCounter <N_BLOCK ; indexCounter++)
+            {
+                aesPlainText[indexCounter] = v[indexCounter]; 
+            }
             aes.encrypt(aesPlainText, cipherText);
             generatorState.addToCounter();
             #if defined(ARDUINO) && ARDUINO >= 100 
@@ -76,10 +80,6 @@ bool Generator::generateBlocks(uint8_t numberOfBlocks, uint8_t* pseudroRandomDat
             #else
                 std::copy(cipherText, cipherText + 16, pseudroRandomData + (16 * index));
             #endif
-            for(uint8_t index = 0; index <N_BLOCK ; index++)
-            {
-                aesPlainText[index] = 0x00; // reusing the plaintext to stop doing new and delete
-            }
         }
         return 1;
     }

@@ -1,3 +1,5 @@
+
+
 /*
  Print.cpp - Base class that provides print() and println()
  Copyright (c) 2008 David A. Mellis.  All right reserved.
@@ -23,7 +25,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-//#include "Arduino.h"
+
+#if defined(ARDUINO) && ARDUINO >= 100 
+ #include <Arduino.h>
+#endif
 
 #include "Print.h"
 

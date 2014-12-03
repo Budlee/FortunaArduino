@@ -10,6 +10,8 @@
 
 #include <inttypes.h>
 
+#define MAX_ENTROPY_POOL_SIZE 32
+
 class Pool
 {
 public:
