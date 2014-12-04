@@ -28,7 +28,7 @@ uint8_t* MySource::getEntropy(uint8_t* retPoolNumber, uint8_t* retEntropySize)
     }
     
     *retEntropySize = 8;    
-    uint8_t returnValue = 0x01;
+    returnValue = 0x01;
     uint8_t *ptrReturnValue = &returnValue;
     
     return ptrReturnValue;

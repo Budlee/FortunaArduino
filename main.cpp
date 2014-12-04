@@ -102,24 +102,25 @@ int main(int argc, char** argv)
     f.RegisterSource(p2);
     f.RegisterSource(p3);
     uint8_t* datawerwer = f.GetRandomData(2);
+    printHash2(datawerwer, 2);
     delete[] datawerwer;
     
     for(int i = 0; i< 4*32;i++)
     {
-        if(i == 32)
-        {
-            uint16_t l;
-            l = 1;
-        }
         f.GatherEntropy();
     }
     f.GatherEntropy();
     sleep(2); //Need the sleep as the "First reseed" is at boot.
     uint8_t* data1 = f.GetRandomData(2); 
+    printHash2(data1, 2);
+    
+    
+    
     std::cout << "Banter1";
     //printBytes(data1);
     delete[] data1;
     data1 = f.GetRandomData(2); 
+    printHash2(data1, 2);
     //printBytes(data1);
     int ire = 25;
     delete[] data1;
@@ -161,6 +162,7 @@ int main(int argc, char** argv)
 //    }
     std::cout << "Banter2";
     delete[] data1;
+     
     return 0;
 }
 

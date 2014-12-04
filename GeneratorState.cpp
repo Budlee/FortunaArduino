@@ -18,7 +18,7 @@ void GeneratorState::setKey(uint8_t *newKey, uint8_t newKeySize)
     delete[] key;
     key = new uint8_t[newKeySize];
 #if defined(ARDUINO) && ARDUINO >= 100 
-    memcpy_P(newKey, newKey, newKeySize);
+    memcpy(key, newKey, newKeySize);
 #else
     std::copy(newKey, newKey + newKeySize, key);
 #endif

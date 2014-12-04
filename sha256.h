@@ -2,7 +2,7 @@
 #define Sha256_h
 
 #include <inttypes.h>
-#include "Print.h"
+#include "PrintMod.h"
 
 #define HASH_LENGTH 32
 #define BLOCK_LENGTH 64

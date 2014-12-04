@@ -22,8 +22,8 @@ void Generator::reseedGenerator(uint8_t* seed, uint16_t seedSize)
         
         //K ← SHAd-256(K || s) <--- (This is stright out of Bruce Schneier and Neils Fergusons Practical Cryptography)
         #if defined(ARDUINO) && ARDUINO >= 100 
-            memcpy_P(newKey, generatorState.getKey(), generatorState.getKeySize());
-            memcpy_P(newKey + generatorState.getKeySize(), seed, seedSize);
+            memcpy(newKey, generatorState.getKey(), generatorState.getKeySize());
+            memcpy(newKey + generatorState.getKeySize(), seed, seedSize);
         #else
             std::copy(generatorState.getKey(), generatorState.getKey() + generatorState.getKeySize(), newKey);
             std::copy(seed, seed + seedSize, newKey + generatorState.getKeySize());
@@ -36,7 +36,7 @@ void Generator::reseedGenerator(uint8_t* seed, uint16_t seedSize)
         delete[] newKey;
 }
 
-uint8_t* Generator::generateRandomData(uint32_t numberOfBytes, u_int8_t *randomBytes)
+uint8_t* Generator::generateRandomData(uint32_t numberOfBytes, uint8_t *randomBytes)
 {
     if (numberOfBytes >= 1 && numberOfBytes < pow(2.0,20.0))
     {
@@ -45,7 +45,7 @@ uint8_t* Generator::generateRandomData(uint32_t numberOfBytes, u_int8_t *randomB
         if (generateBlocks(rNoB, random16kBytes))
         {
             #if defined(ARDUINO) && ARDUINO >= 100 
-                memcpy_P(randomBytes, random16kBytes, numberOfBytes);
+                memcpy(randomBytes, random16kBytes, numberOfBytes);
             #else
                 std::copy(random16kBytes, random16kBytes + numberOfBytes, randomBytes);
             #endif
@@ -76,7 +76,7 @@ bool Generator::generateBlocks(uint8_t numberOfBlocks, uint8_t* pseudroRandomDat
             aes.encrypt(aesPlainText, cipherText);
             generatorState.addToCounter();
             #if defined(ARDUINO) && ARDUINO >= 100 
-                memcpy_P(pseudroRandomData, cipherText + (16 * index), 16);
+                memcpy(pseudroRandomData+ (16 * index), cipherText, 16);
             #else
                 std::copy(cipherText, cipherText + 16, pseudroRandomData + (16 * index));
             #endif

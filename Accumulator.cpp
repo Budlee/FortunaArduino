@@ -63,14 +63,14 @@ uint8_t* Accumulator::RandomData(uint32_t numberOfBytes)
         }
         
         poolEntropy = new uint8_t[32 * poolUsageCount];
-        for (u_int8_t poolIndex = 0; poolIndex < poolUsageCount; poolIndex++)
+        for (uint8_t poolIndex = 0; poolIndex < poolUsageCount; poolIndex++)
         {
             sha.init();
             uint32_t v = prngState.getPool(poolIndex)->getEntropy();
             sha.write(v);
             uint8_t* shaResult = sha.result();
             #if defined(ARDUINO) && ARDUINO >= 100 
-                memcpy_P(poolEntropy + (32 * poolIndex), shaResult, 32);
+                memcpy(poolEntropy + (32 * poolIndex), shaResult, 32);
             #else
                 std::copy(shaResult, shaResult+32, poolEntropy + (32*poolIndex));
             #endif
@@ -129,7 +129,7 @@ void Accumulator::AddEventData()
 time_t Accumulator::getTime()
 {
 #if defined(ARDUINO) && ARDUINO >= 100 
-    return getTimeNow();
+    return now();
 #else
     time_t t;
     return time(&t);
