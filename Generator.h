@@ -5,11 +5,10 @@
 #include "sha256.h"
 #include "AES.h"
 #include <inttypes.h>
-
+#include <math.h>
 #if defined(ARDUINO) && ARDUINO >= 100 
 #include <Arduino.h>
 #else
-#include <math.h>
 #include <algorithm> 
 #endif
 

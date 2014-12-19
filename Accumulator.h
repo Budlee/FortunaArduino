@@ -3,7 +3,9 @@
 
 #include "PRNGState.h"
 #include "Source.h"
+#include "SeedFile.h"
 #include <inttypes.h>
+#include <math.h>
 #if defined(ARDUINO) && ARDUINO >= 100 
 #include "Time.h"
 #include <Arduino.h>
@@ -12,17 +14,19 @@
 #include <stdlib.h>
 #endif
 
+#define POOL_COUNT 32
 #define ENTROPY_SOURCE_MAX_SIZE 255
-#define MIN_ENTROPY_POOL_SIZE 32
+#define MIN_ENTROPY_POOL_SIZE 64
 
 class Accumulator
 {
 public:
     Accumulator();
     ~Accumulator();
-    uint8_t* RandomData(uint32_t numberOfBytes);
+    //uint8_t* randomData(uint32_t numberOfBytes);
     bool registerEntropySource(Source *source);
-    void AddEventData();
+    void addEventData(PRNGState *prngState);
+    
 private:
     struct SourceNodeStruct
     {
@@ -30,13 +34,7 @@ private:
         Source *source;
         SourceNodeStruct *next;
     } *sourceNode;
-    
-    time_t getTime();
-    time_t reseedTime;
-    PRNGState prngState;
     uint8_t sourceDeviceCount;
-    Sha256Class sha;
-    uint8_t *poolEntropy;// = new uint8_t[32 * poolUsageCount];
 };
 
 #endif	/* ACCUMULATOR_H */

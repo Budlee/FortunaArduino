@@ -2,7 +2,11 @@
 #define Sha256_h
 
 #include <inttypes.h>
+#if defined(ARDUINO) && ARDUINO >= 100 
+#include "Print.h"
+#else
 #include "PrintMod.h"
+#endif
 
 #define HASH_LENGTH 32
 #define BLOCK_LENGTH 64

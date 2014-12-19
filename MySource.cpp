@@ -9,9 +9,14 @@
 
 MySource::MySource()
 :poolNumber(0x0)
-,returnValue(0x01)
+,returnValue(new uint8_t[2])
 {
     
+}
+
+MySource::~MySource()
+{
+    delete[] returnValue;
 }
 
 uint8_t* MySource::getEntropy(uint8_t* retPoolNumber, uint8_t* retEntropySize)
@@ -27,9 +32,14 @@ uint8_t* MySource::getEntropy(uint8_t* retPoolNumber, uint8_t* retEntropySize)
         ++poolNumber;
     }
     
-    *retEntropySize = 8;    
-    returnValue = 0x01;
-    uint8_t *ptrReturnValue = &returnValue;
+    *retEntropySize = 16;
+    delete[] returnValue;
+    returnValue = new uint8_t[4];
+    returnValue[0] = 0x21;
+    returnValue[1] = 0x43;
+    returnValue[2] = 0x65;
+    returnValue[3] = 0x87;
+    uint8_t *ptrReturnValue = returnValue;
     
     return ptrReturnValue;
     
